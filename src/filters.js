@@ -1,5 +1,5 @@
 import Converter from 'color-convert';
-let minDistance = 100000000000;
+
 export default {
   decolorizeWithoutKeyColor(buffer, setting) {
     this.apply(buffer, (buffer, idx) => {
@@ -12,20 +12,10 @@ export default {
         setting.v_weight * (Math.pow(key[2] - hsv[2], 2))
       );
 
-      if (idx%1000 === 0) {
-        console.log(`${key[0]} -  ${hsv[0]} distance: ${this.getHueDistance(key[0], hsv[0])}`);
-      }
-
-      if (distance < minDistance) {
-        minDistance = distance;
-      }
-
       if (distance > setting.threshold) {
         this.decolorizePixel(buffer, idx);
       }
     });
-
-    console.log(minDistance);
   },
   getHueDistance(key, target) {
     let dis = Math.abs(key - target);

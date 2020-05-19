@@ -2,6 +2,7 @@
   <div id="app">
     <h1><span id="logo-highlight">D</span>asshoku</h1>
     <Main />
+    <footer id="copyright">Created by <a href="https://twitter.com/VienosNotes">@VienosNotes</a>, <a href="https://github.com/VienosNotes/Dasshoku">Github</a> </footer>
   </div>
 </template>
 
@@ -20,7 +21,6 @@ export default {
 @import url('https://fonts.googleapis.com/css2?family=Amatic+SC:wght@700&family=Oswald:wght@300&display=swap')
 
 #app
-  font-family Avenir, Helvetica, Arial, sans-serif
   -webkit-font-smoothing antialiased
   -moz-osx-font-smoothing grayscale
   text-align center
@@ -34,4 +34,12 @@ h1
 
 #logo-highlight
   color Orange
+
+#copyright
+  margin 20px
+  font-size small
+  color darkgray
+
+#copyright a
+  color gray
 </style>

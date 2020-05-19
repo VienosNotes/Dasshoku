@@ -2,16 +2,16 @@
   <div class="main-frame">
     <div id="images-container">
       <div id="orig-image-container" class="image-container">
-        <canvas id="orig-image-canvas" width="400" height="300"
+        <canvas id="orig-image-canvas" width="600" height="400"
                 @click="chooseColor"></canvas>
+        <div>Click to pick the key color</div>
       </div>
-      <div>
+      <div  id="triangle">
         <!--suppress CheckImageSize -->
-        <img src="../assets/gradient_triangle.png" width="110" alt="gradient triangle"
-             @click="execWithKey">
+        <img src="../assets/gradient_triangle.png" width="110" alt="gradient triangle">
       </div>
       <div id="dasshoku-image-container" class="image-container">
-        <canvas id="dasshoku-image-canvas" width="400" height="300"></canvas>
+        <canvas id="dasshoku-image-canvas" width="600" height="400"></canvas>
       </div>
     </div>
     <div>
@@ -25,19 +25,19 @@
         </div>
         <div class="controller">
           <div>Threshold: {{threshold}}</div>
-          <vue-slider v-model="threshold" :min="0" :max="100"></vue-slider>
+          <vue-slider v-model="threshold" :min="0" :max="200" :lazy="true"></vue-slider>
         </div>
         <div class="controller">
           <div>Hue Weight: {{h_weight}}</div>
-          <vue-slider v-model="h_weight" :min="0" :max="10"></vue-slider>
+          <vue-slider v-model="h_weight" :min="0" :max="10" :interval="0.1" :lazy="true"></vue-slider>
         </div>
         <div class="controller">
           <div>Saturation Weight: {{s_weight}}</div>
-          <vue-slider v-model="s_weight" :min="0" :max="10"></vue-slider>
+          <vue-slider v-model="s_weight" :min="0" :max="10" :interval="0.1" :lazy="true"></vue-slider>
         </div>
         <div class="controller">
           <div>Brightness Weight: {{v_weight}}</div>
-          <vue-slider v-model="v_weight" :min="0" :max="10"></vue-slider>
+          <vue-slider v-model="v_weight" :min="0" :max="10" :interval="0.1" :lazy="true"></vue-slider>
         </div>
       </div>
     </div>
@@ -67,19 +67,25 @@ export default {
       v_weight: Number,
     }
   },
+  watch: {
+    selectedColor() { this.execWithKey() },
+    threshold() { this.execWithKey() },
+    h_weight() { this.execWithKey() },
+    s_weight() { this.execWithKey() },
+    v_weight() { this.execWithKey() }
+  },
   mounted() {
-    this.selectedColor = "#FF0000";
-    this.threshold = 100;
-    this.h_weight = 1;
-    this.s_weight = 1;
-    this.v_weight = 1;
-
+    this.selectedColor = "#DB7B97";
+    this.threshold = 111;
+    this.h_weight = 3.7;
+    this.s_weight = 2.6;
+    this.v_weight = 5.5;
 
     let ctx = this.origCtx;
     let img = new Image();
     img.addEventListener('load', () => {
-      this.drawImage(ctx, img);
-      this.exec();
+      this.drawImage(ctx, img, this.origCanvas.width, this.origCanvas.height);
+      this.execWithKey();
     });
     img.src = BlankImage;
   },
@@ -91,21 +97,15 @@ export default {
         let data = event.target.result;
         let image = new Image();
         image.addEventListener('load', () => {
-          this.drawImage(this.origCtx, image);
-          this.exec();
+          this.drawImage(this.origCtx, image, this.origCanvas.width, this.origCanvas.height);
+          this.execWithKey();
         });
         image.src = data;
       });
       reader.readAsDataURL(file);
     },
-    drawImage(ctx, img) {
-      console.log(ctx);
-      ctx.drawImage(img, 0, 0, 400, 300);
-    },
-    exec() {
-      let origBuffer = this.origCtx.getImageData(0, 0, this.origCanvas.width, this.origCanvas.height);
-      Filters.decolorize(origBuffer);
-      this.dasshokuCtx.putImageData(origBuffer, 0, 0);
+    drawImage(ctx, img, width, height) {
+      ctx.drawImage(img, 0, 0, width, height);
     },
     execWithKey() {
       let origBuffer = this.origCtx.getImageData(0, 0, this.origCanvas.width, this.origCanvas.height);
@@ -147,24 +147,12 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="stylus">
-h3
-  margin 40px 0 0
-
-ul
-  list-style-type none
-  padding 0
-
-li
-  display inline-block
-  margin 0 10px
-
-a
-  color #42b983
 
 #images-container
   display flex
   justify-content center
-  align-items center
+  align-items top
+  position relative
 
 .image-container
   padding-left 50px
@@ -194,5 +182,8 @@ a
 
 .palette
   width 1000px
+
+#triangle
+  align-self center
 
 </style>
