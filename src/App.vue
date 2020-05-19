@@ -2,6 +2,7 @@
   <div id="app">
     <h1><span id="logo-highlight">D</span>asshoku</h1>
     <Main />
+    <div id="caption">このアプリはブラウザ上のみで動作するため、画像がサーバにアップロードされたりはしません。保存する場合は右クリックからどうぞ。</div>
     <footer id="copyright">Created by <a href="https://twitter.com/VienosNotes">@VienosNotes</a>, <a href="https://github.com/VienosNotes/Dasshoku">Github</a> </footer>
   </div>
 </template>
@@ -36,10 +37,14 @@ h1
   color Orange
 
 #copyright
-  margin 20px
+  margin 10px
   font-size small
   color darkgray
 
 #copyright a
   color gray
+
+#caption
+  color darkgray
+  font-size small
 </style>

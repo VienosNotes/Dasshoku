@@ -48,7 +48,6 @@
 import BlankImage from '../assets/test.jpg';
 import Filters from '../filters.js';
 import VueSlider from 'vue-slider-component'
-import 'vue-slider-component/theme/antd.css';
 
 export default {
   name: 'Main',
@@ -105,7 +104,16 @@ export default {
       reader.readAsDataURL(file);
     },
     drawImage(ctx, img, width, height) {
-      ctx.drawImage(img, 0, 0, width, height);
+      ctx.clearRect(0, 0, width, height);
+
+      let iAspect = img.width / img.height;
+      let cAspect = width / height;
+
+      if (iAspect > cAspect) {
+        ctx.drawImage(img, 0, (height - (width/iAspect))/2, width, width/iAspect);
+      } else {
+        ctx.drawImage(img, (width - (height*iAspect))/2, 0, height*iAspect, height);
+      }
     },
     execWithKey() {
       let origBuffer = this.origCtx.getImageData(0, 0, this.origCanvas.width, this.origCanvas.height);
@@ -146,13 +154,16 @@ export default {
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped lang="stylus">
+<style lang="stylus">
+$themeColor = #ffa500
+@import '../assets/slider.css'
 
 #images-container
   display flex
   justify-content center
   align-items top
   position relative
+  flex-wrap wrap
 
 .image-container
   padding-left 50px
