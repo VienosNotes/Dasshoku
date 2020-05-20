@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.com/VienosNotes/Dasshoku.svg?branch=master)](https://travis-ci.com/VienosNotes/Dasshoku)
+
 # dasshoku
 
 ## Project setup
