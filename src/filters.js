@@ -33,7 +33,7 @@ export default {
     if (dis > 180) {
       dis = 360 - dis;
     }
-    return dis;
+    return dis * (256/180);
   },
   /**
    * Apply specified filter to ImageData buffer.
