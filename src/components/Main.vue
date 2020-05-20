@@ -36,9 +36,10 @@
         <div id="color-chooser" class="controller">
         Chosen Color: <span id="chosen-color-sample" :style="{ background: selectedColor }"></span><span>{{selectedColor}}</span>
         </div>
+
         <div class="controller">
           <div>Threshold: {{threshold}}</div>
-          <vue-slider v-model="threshold" :min="0" :max="200" :lazy="true"></vue-slider>
+          <vue-slider v-model="threshold" :data="threshold_range" :lazy="true"></vue-slider>
         </div>
         <div class="controller">
           <div>Hue Weight: {{h_weight}}</div>
@@ -64,6 +65,7 @@ import VueSlider from 'vue-slider-component';
 
 const sp_threshold = 1500; // maximum smartphone screen width
 const aspect_ratio = 3/4;
+const max_threshold = 200; // maximum threshold of distance
 
 export default {
   name: 'Main',
@@ -81,6 +83,7 @@ export default {
       s_weight: Number,
       v_weight: Number,
       latestUrl: String,
+      threshold_range: []
     }
   },
   watch: {
@@ -96,6 +99,10 @@ export default {
     this.h_weight = 3.7;
     this.s_weight = 2.6;
     this.v_weight = 5.5;
+
+    let range = [...Array(max_threshold+1).keys()];
+    range.reverse();
+    this.threshold_range = range;
 
     // noinspection ES6ModulesDependencies
     let vpWidth = window.visualViewport.width;
