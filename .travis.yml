@@ -15,3 +15,6 @@ install:
 script:
   - yarn lint
   - yarn build
+
+after_success:
+  - ./.travis/deploy_gh-pages.sh
