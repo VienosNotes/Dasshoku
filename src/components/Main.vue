@@ -47,7 +47,10 @@
 <script>
 import BlankImage from '../assets/test.jpg';
 import Filters from '../filters.js';
-import VueSlider from 'vue-slider-component'
+import VueSlider from 'vue-slider-component';
+
+
+const sp_threshold = 800; // maximum smartphone screen width
 
 export default {
   name: 'Main',
@@ -80,6 +83,10 @@ export default {
     this.s_weight = 2.6;
     this.v_weight = 5.5;
 
+    if (screen.width <= sp_threshold) {
+      this.applySpStyle();
+    }
+
     let ctx = this.origCtx;
     let img = new Image();
     img.addEventListener('load', () => {
@@ -89,10 +96,17 @@ export default {
     img.src = BlankImage;
   },
   methods: {
+    /**
+     * Initialize each canvases with loaded image and decolorized when <input> has got a new image.
+     * @param {UIEvent} ev an input event of <input>.
+     */
     initImages(ev) {
+      // noinspection JSUnresolvedVariable
       let file = ev.currentTarget.files[0];
       let reader = new FileReader();
       reader.addEventListener('load', event => {
+
+        // noinspection JSUnresolvedVariable
         let data = event.target.result;
         let image = new Image();
         image.addEventListener('load', () => {
@@ -103,6 +117,13 @@ export default {
       });
       reader.readAsDataURL(file);
     },
+    /**
+     * Draw an image into the 2D context as fitted for the canvas.
+     * @param {CanvasRenderingContext2D} ctx
+     * @param {HTMLImageElement} img
+     * @param {number} width Width of Canvas
+     * @param {number} height Height of Canvas
+     */
     drawImage(ctx, img, width, height) {
       ctx.clearRect(0, 0, width, height);
 
@@ -115,6 +136,9 @@ export default {
         ctx.drawImage(img, (width - (height*iAspect))/2, 0, height*iAspect, height);
       }
     },
+    /**
+     * Redraw decolorized image with current parameters.
+     */
     execWithKey() {
       let origBuffer = this.origCtx.getImageData(0, 0, this.origCanvas.width, this.origCanvas.height);
       let setting = {
@@ -125,27 +149,51 @@ export default {
       Filters.decolorizeWithoutKeyColor(origBuffer, setting);
       this.dasshokuCtx.putImageData(origBuffer, 0, 0);
     },
+    /**
+     * Choose color from clicked pixel.
+     * @param {MouseEvent} ev
+     */
     chooseColor(ev) {
-      let posX = ev.pageX - ev.target.getBoundingClientRect().x;
-      let posY = ev.pageY - ev.target.getBoundingClientRect().y;
+      let target = ev.target;
+      let posX = ev.pageX - target.getBoundingClientRect().x;
+      let posY = ev.pageY - target.getBoundingClientRect().y;
       let pointBuffer = this.origCtx.getImageData(posX, posY, 1, 1);
       let pointPixel = pointBuffer.data;
       this.selectedColor = `#${Filters.rgbToHex(pointPixel)}`;
       this.execWithKey();
+    },
+    applySpStyle() {
+
     }
   },
   computed: {
+    /**
+     * 2D Context of original image canvas.
+     * @returns {CanvasRenderingContext2D | WebGLRenderingContext}
+     */
     origCtx() {
       let canvas = this.origCanvas;
       return canvas.getContext('2d');
     },
+    /**
+     * Canvas for original image.
+     * @returns {HTMLCanvasElement}
+     */
     origCanvas() {
       return document.getElementById('orig-image-canvas');
     },
+    /**
+     * 2D Context of decolorized image canvas.
+     * @returns {CanvasRenderingContext2D | WebGLRenderingContext}
+     */
     dasshokuCtx() {
       let canvas = this.dasshokuCanvas;
       return canvas.getContext('2d');
     },
+    /**
+     * Canvas for decolorized image.
+     * @returns {HTMLCanvasElement}
+     */
     dasshokuCanvas() {
       return document.getElementById('dasshoku-image-canvas');
     }

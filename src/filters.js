@@ -1,6 +1,11 @@
 import Converter from 'color-convert';
 
 export default {
+  /**
+   * Overwrite buffer with decolorized image using passed setting.
+   * @param {ImageData} buffer
+   * @param {object} setting
+   */
   decolorizeWithoutKeyColor(buffer, setting) {
     this.apply(buffer, (buffer, idx) => {
       let key = Converter.hex.hsv(setting.key);
@@ -17,6 +22,12 @@ export default {
       }
     });
   },
+  /**
+   * Return the distance between key and target.
+   * @param {number[]} key HSV Color that used as origin.
+   * @param {number[]} target HSV Color that currently processed.
+   * @returns {number}
+   */
   getHueDistance(key, target) {
     let dis = Math.abs(key - target);
     if (dis > 180) {
@@ -24,9 +35,11 @@ export default {
     }
     return dis;
   },
-  decolorize(buffer) {
-    this.apply(buffer, this.decolorizePixel);
-  },
+  /**
+   * Apply specified filter to ImageData buffer.
+   * @param {ImageData} buffer Processed ImageData.
+   * @param {Function} filter Filter function that get {UInt16Array} and cursor index.
+   */
   apply(buffer, filter) {
     let pixelsCount = buffer.data.length / 4;
     let pixels = buffer.data;
@@ -34,6 +47,11 @@ export default {
       filter(pixels, i);
     }
   },
+  /**
+   * Decolorize a pixel([r, g, b, a]) in buffer using head index.
+   * @param {Uint16Array} buffer Processed ImageData buffer.
+   * @param {number} idx Head (R-channel) index of processing pixel.
+   */
   decolorizePixel(buffer, idx) {
     let hsl = Converter.rgb.hsl.raw(buffer[idx], buffer[idx+1], buffer[idx+2]);
     let decolorized = Converter.hsl.rgb(hsl[0], 0, hsl[2]);
@@ -41,6 +59,11 @@ export default {
     buffer[idx+1] = decolorized[1];
     buffer[idx+2] = decolorized[2]
   },
+  /**
+   * Convert RGBA color to hex string; ex. "#FFA500".
+   * @param {number[]} pixel
+   * @returns {string}
+   */
   rgbToHex(pixel) {
     return Converter.rgb.hex(pixel);
   }
