@@ -159,22 +159,46 @@ export default {
      * @param {MouseEvent} ev
      */
     chooseColor(ev) {
-      let target = ev.target;
-      let posX = ev.pageX - target.getBoundingClientRect().x;
-      let posY = ev.pageY - target.getBoundingClientRect().y;
-      let pointBuffer = this.origCtx.getImageData(posX, posY, 1, 1);
+      let pointBuffer = this.origCtx.getImageData(ev.offsetX, ev.offsetY, 1, 1);
       let pointPixel = pointBuffer.data;
       this.selectedColor = `#${Filters.rgbToHex(pointPixel)}`;
-      this.execWithKey();
+
+      // on the canvas but out of the image
+      if (pointPixel[3] === 0) {
+        this.execWithKey();
+      }
     },
     applySpStyle(vpWidth) {
-      let canvasWidth = Math.min(vpWidth - 100, 600);
       console.log(vpWidth);
-      console.log(canvasWidth);
+
+      let canvasContainers = document.getElementsByClassName('image-container');
+
+      canvasContainers.forEach(c => {
+        c.style.width = `${Math.floor(vpWidth * 0.8)}px`;
+        c.style.height = `${Math.floor(vpWidth * 0.8 * aspect_ratio)}px`;
+        c.style.positioin = 'relative';
+        c.style.display = 'block';
+        console.log(c);
+      });
+
+      let realScreenWidth = vpWidth * devicePixelRatio;
+      let realCanvasWidth = realScreenWidth * 0.8;
+      let canvasWidth = realCanvasWidth; // Math.min(vpWidth - 100, 600);
       this.origCanvas.width = canvasWidth;
       this.origCanvas.height = Math.floor(canvasWidth * aspect_ratio);
+      //this.origCanvas.style.position = 'absolute';
+      this.origCanvas.style.top = 0;
+      this.origCanvas.style.left = 0;
       this.dasshokuCanvas.width = canvasWidth;
       this.dasshokuCanvas.height = Math.floor(canvasWidth * aspect_ratio);
+      //this.dasshokuCanvas.style.position = 'absolute';
+      this.dasshokuCanvas.style.top = 0;
+      this.dasshokuCanvas.style.left = 0;
+      let dpr = window.devicePixelRatio;
+      this.origCanvas.style['transform-origin'] = 'top left';
+      this.origCanvas.style.transform = `scale(${1/dpr}, ${1/dpr})`;
+      this.dasshokuCanvas.style['transform-origin'] = 'top left';
+      this.dasshokuCanvas.style.transform = `scale(${1/dpr}, ${1/dpr})`;
     }
   },
   computed: {
