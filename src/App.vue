@@ -1,5 +1,7 @@
 <template>
   <div id="app">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+          rel="stylesheet">
     <h1><span id="logo-highlight">D</span>asshoku</h1>
     <Main />
     <div id="caption">このアプリはブラウザ上のみで動作するため、画像がサーバにアップロードされたりはしません。保存する場合は右クリックからどうぞ。</div>

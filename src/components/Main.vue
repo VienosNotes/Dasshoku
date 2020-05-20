@@ -15,9 +15,21 @@
         <canvas id="dasshoku-image-canvas" width="600" height="400"></canvas>
       </div>
     </div>
-    <div>
-      <input type="file" id="orig-image-selector" name="Choose"
-             accept="image/*" @input="initImages">
+    <div id="buttons-container">
+      <label id="open-button" class="label-button">
+        <span class="material-icons button-icon">
+          add_photo_alternate
+        </span>
+        <span>Open</span>
+        <input type="file" id="orig-image-selector" name="Choose"
+               accept="image/*" @input="initImages">
+      </label>
+      <label id="save-button" class="label-button" @click="save">
+        <span class="material-icons button-icon">
+          save_alt
+        </span>
+        <span>Save</span>
+      </label>
     </div>
     <div id="palette-container">
       <div class="palette">
@@ -49,7 +61,6 @@
 import BlankImage from '../assets/test.jpg';
 import Filters from '../filters.js';
 import VueSlider from 'vue-slider-component';
-
 
 const sp_threshold = 1500; // maximum smartphone screen width
 const aspect_ratio = 3/4;
@@ -168,13 +179,16 @@ export default {
       this.execWithKey();
     },
     applySpStyle(vpWidth) {
-      let canvasWidth = Math.min(vpWidth - 100, 600);
+      let canvasWidth = Math.min(vpWidth * 0.7, 600);
       console.log(vpWidth);
       console.log(canvasWidth);
       this.origCanvas.width = canvasWidth;
       this.origCanvas.height = Math.floor(canvasWidth * aspect_ratio);
       this.dasshokuCanvas.width = canvasWidth;
       this.dasshokuCanvas.height = Math.floor(canvasWidth * aspect_ratio);
+    },
+    save() {
+
     }
   },
   computed: {
@@ -219,8 +233,6 @@ $themeColor = #ffa500
 
 $threshold = 1500
 
-
-
 .image-container
 
   @media screen and (min-width: $threshold+1 px)
@@ -246,12 +258,14 @@ $threshold = 1500
     display flex
     flex-direction row
     justify-content center
-    align-items top
+    align-items center
     position relative
     flex-wrap wrap
     flex-direction column
 
 #click-caption
+  color darkgray
+
   @media screen and (max-width: $threshold px)
     margin-top 0
     margin-bottom 5px
@@ -261,9 +275,6 @@ $threshold = 1500
     transform rotate(90deg)
     height 30px
     width 30px
-
-#orig-image-selector
-  margin 10px
 
 #palette-container
   display flex
@@ -288,5 +299,40 @@ $threshold = 1500
 
 #triangle
   align-self center
+
+label input
+  display none
+
+#buttons-container
+  display flex
+  justify-content center
+  align-items top
+
+.button-icon
+  vertical-align bottom
+
+#open-button
+  color white
+  background orange
+  padding 3px 5px 3px 3px
+  border solid 1px orange
+  cursor pointer
+  border-radius 4px
+  display block
+
+#save-button
+  color white
+  background gray
+  padding 3px 5px 3px 3px
+  border solid 1px gray
+  cursor pointer
+  border-radius 4px
+  display block
+
+.label-button
+  margin 0 20px 0 20px
+
+.label-button:hover
+  opacity 0.7
 
 </style>
