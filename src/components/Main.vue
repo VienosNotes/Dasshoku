@@ -170,12 +170,15 @@ export default {
      * @param {MouseEvent} ev
      */
     chooseColor(ev) {
-      let target = ev.target;
-      let posX = ev.pageX - target.getBoundingClientRect().x;
-      let posY = ev.pageY - target.getBoundingClientRect().y;
-      let pointBuffer = this.origCtx.getImageData(posX, posY, 1, 1);
+      let pointBuffer = this.origCtx.getImageData(ev.offsetX, ev.offsetY, 1, 1);
       let pointPixel = pointBuffer.data;
       this.selectedColor = `#${Filters.rgbToHex(pointPixel)}`;
+
+      // on the canvas but out of the image
+      if (pointPixel[3] === 255) {
+        return;
+      }
+
       this.execWithKey();
     },
     applySpStyle(vpWidth) {
