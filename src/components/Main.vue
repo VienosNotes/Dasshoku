@@ -80,6 +80,7 @@ export default {
       h_weight: Number,
       s_weight: Number,
       v_weight: Number,
+      latestUrl: String,
     }
   },
   watch: {
@@ -191,7 +192,16 @@ export default {
       this.dasshokuCanvas.height = Math.floor(canvasWidth * aspect_ratio);
     },
     save() {
-
+      URL.revokeObjectURL(this.latestUrl);
+      this.dasshokuCanvas.toBlob(b => {
+        let url = URL.createObjectURL(b);
+        let anchor = document.createElement('a');
+        anchor.href = url;
+        let now = new Date(Date.now());
+        anchor.download = `dasshoku_${now.getFullYear()}${now.getMonth()}${now.getDate()}_${now.getHours()}${now.getMinutes()}${now.getSeconds()}.png`;
+        anchor.click();
+        URL.revokeObjectURL(url);
+      });
     }
   },
   computed: {
@@ -268,6 +278,7 @@ $threshold = 1500
 
 #click-caption
   color darkgray
+  user-select none
 
   @media screen and (max-width: $threshold px)
     margin-top 0
@@ -334,6 +345,7 @@ label input
 
 .label-button
   margin 0 20px 0 20px
+  user-select none
 
 .label-button:hover
   opacity 0.7
