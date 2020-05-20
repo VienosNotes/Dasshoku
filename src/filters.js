@@ -49,7 +49,7 @@ export default {
   },
   /**
    * Decolorize a pixel([r, g, b, a]) in buffer using head index.
-   * @param {Uint16Array} buffer Processed ImageData buffer.
+   * @param {Uint8ClampedArray} buffer Processed ImageData buffer.
    * @param {number} idx Head (R-channel) index of processing pixel.
    */
   decolorizePixel(buffer, idx) {
@@ -61,7 +61,7 @@ export default {
   },
   /**
    * Convert RGBA color to hex string; ex. "#FFA500".
-   * @param {number[]} pixel
+   * @param {number[] | Uint8ClampedArray} pixel
    * @returns {string}
    */
   rgbToHex(pixel) {

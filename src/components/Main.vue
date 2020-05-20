@@ -1,14 +1,15 @@
+<!--suppress JSUnresolvedVariable -->
 <template>
   <div class="main-frame">
     <div id="images-container">
       <div id="orig-image-container" class="image-container">
         <canvas id="orig-image-canvas" width="600" height="400"
                 @click="chooseColor"></canvas>
-        <div>Click to pick the key color</div>
+        <div id="click-caption">Click to pick the key color</div>
       </div>
-      <div  id="triangle">
+      <div id="triangle">
         <!--suppress CheckImageSize -->
-        <img src="../assets/gradient_triangle.png" width="110" alt="gradient triangle">
+        <img src="../assets/gradient_triangle.png" width="110" alt="gradient triangle" id="triangle-img">
       </div>
       <div id="dasshoku-image-container" class="image-container">
         <canvas id="dasshoku-image-canvas" width="600" height="400"></canvas>
@@ -50,7 +51,8 @@ import Filters from '../filters.js';
 import VueSlider from 'vue-slider-component';
 
 
-const sp_threshold = 800; // maximum smartphone screen width
+const sp_threshold = 1500; // maximum smartphone screen width
+const aspect_ratio = 3/4;
 
 export default {
   name: 'Main',
@@ -83,8 +85,11 @@ export default {
     this.s_weight = 2.6;
     this.v_weight = 5.5;
 
-    if (screen.width <= sp_threshold) {
-      this.applySpStyle();
+    // noinspection ES6ModulesDependencies
+    let vpWidth = window.visualViewport.width;
+    console.log(window.visualViewport);
+    if (vpWidth <= sp_threshold) {
+      this.applySpStyle(vpWidth);
     }
 
     let ctx = this.origCtx;
@@ -162,8 +167,14 @@ export default {
       this.selectedColor = `#${Filters.rgbToHex(pointPixel)}`;
       this.execWithKey();
     },
-    applySpStyle() {
-
+    applySpStyle(vpWidth) {
+      let canvasWidth = Math.min(vpWidth - 100, 600);
+      console.log(vpWidth);
+      console.log(canvasWidth);
+      this.origCanvas.width = canvasWidth;
+      this.origCanvas.height = Math.floor(canvasWidth * aspect_ratio);
+      this.dasshokuCanvas.width = canvasWidth;
+      this.dasshokuCanvas.height = Math.floor(canvasWidth * aspect_ratio);
     }
   },
   computed: {
@@ -206,17 +217,50 @@ export default {
 $themeColor = #ffa500
 @import '../assets/slider.css'
 
-#images-container
-  display flex
-  justify-content center
-  align-items top
-  position relative
-  flex-wrap wrap
+$threshold = 1500
+
+
 
 .image-container
-  padding-left 50px
-  padding-right 50px
-  padding-top 20px
+
+  @media screen and (min-width: $threshold+1 px)
+    padding-left 50px
+    padding-right 50px
+    padding-top 20px
+
+  @media screen and (max-width: $threshold px)
+    padding-left 50px
+    padding-right 50px
+    padding-top 0
+
+#images-container
+
+  @media screen and (min-width: $threshold+1 px)
+    display flex
+    justify-content center
+    align-items top
+    position relative
+    flex-wrap wrap
+
+  @media screen and (max-width: $thoreshold px)
+    display flex
+    flex-direction row
+    justify-content center
+    align-items top
+    position relative
+    flex-wrap wrap
+    flex-direction column
+
+#click-caption
+  @media screen and (max-width: $threshold px)
+    margin-top 0
+    margin-bottom 5px
+
+#triangle-img
+  @media screen and (max-width: $threshold px)
+    transform rotate(90deg)
+    height 30px
+    width 30px
 
 #orig-image-selector
   margin 10px

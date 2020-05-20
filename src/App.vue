@@ -3,7 +3,7 @@
     <h1><span id="logo-highlight">D</span>asshoku</h1>
     <Main />
     <div id="caption">このアプリはブラウザ上のみで動作するため、画像がサーバにアップロードされたりはしません。保存する場合は右クリックからどうぞ。</div>
-    <footer id="copyright">Created by <a href="https://twitter.com/VienosNotes">@VienosNotes</a>, <a href="https://github.com/VienosNotes/Dasshoku">Github</a> </footer>
+    <footer id="copyright">Dasshoku v0.1, Created by <a href="https://twitter.com/VienosNotes">@VienosNotes</a>, <a href="https://github.com/VienosNotes/Dasshoku">Github</a> </footer>
   </div>
 </template>
 
@@ -33,6 +33,12 @@ h1
   font-size 70px
   margin 0
 
+  @media screen and (max-width: 1500px)
+    font-family 'Amatic SC', cursive
+    font-size 40px
+    margin 0
+
+
 #logo-highlight
   color Orange
 
@@ -41,10 +47,16 @@ h1
   font-size small
   color darkgray
 
+  @media screen and (max-width: 1500px)
+    font-size x-small
+
+
 #copyright a
   color gray
 
 #caption
   color darkgray
   font-size small
+  @media screen and (max-width: 1500px)
+      font-size x-small
 </style>
