@@ -95,10 +95,10 @@ export default {
   },
   mounted() {
     this.selectedColor = "#DB7B97";
-    this.threshold = 111;
-    this.h_weight = 3.7;
-    this.s_weight = 2.6;
-    this.v_weight = 5.5;
+    this.threshold = 149;
+    this.h_weight = 2.6;
+    this.s_weight = 8.2;
+    this.v_weight = 6.3;
 
     let range = [...Array(max_threshold+1).keys()];
     range.reverse();
