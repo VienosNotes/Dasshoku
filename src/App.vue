@@ -4,7 +4,7 @@
           rel="stylesheet">
     <h1><span id="logo-highlight">D</span>asshoku</h1>
     <Main />
-    <div id="caption">このアプリはブラウザ上のみで動作するため、画像がサーバにアップロードされたりはしません。保存する場合は右クリックからどうぞ。</div>
+    <div id="caption">このアプリはブラウザの機能のみで動作するため、画像がサーバにアップロードされることはありません。</div>
     <footer id="copyright">Dasshoku v0.1, Created by <a href="https://twitter.com/VienosNotes">@VienosNotes</a>, <a href="https://github.com/VienosNotes/Dasshoku">Github</a> </footer>
   </div>
 </template>
