@@ -131,7 +131,6 @@
 
       // noinspection ES6ModulesDependencies
       let vpWidth = window.visualViewport.width;
-      console.log(window.visualViewport);
       if (vpWidth <= sp_threshold) {
         this.applySpStyle(vpWidth);
       }
@@ -213,8 +212,6 @@
       },
       applySpStyle(vpWidth) {
         let canvasWidth = Math.min(vpWidth * 0.7, 600);
-        console.log(vpWidth);
-        console.log(canvasWidth);
         this.origCanvas.width = canvasWidth;
         this.origCanvas.height = Math.floor(canvasWidth * aspect_ratio);
         this.dasshokuCanvas.width = canvasWidth;
