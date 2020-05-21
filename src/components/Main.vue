@@ -252,9 +252,9 @@
       },
       resizeWithLongSide(longSide, aspect) {
         if (aspect > 1) {
-          return [Math.floor(longSide / aspect), longSide];
+          return [longSide, Math.floor(longSide / aspect)];
         } else {
-          return [longSide, Math.floor(longSide * aspect)];
+          return [Math.floor(longSide * aspect),longSide];
         }
       },
       speed(size) {
