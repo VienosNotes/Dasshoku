@@ -208,7 +208,6 @@
         }
 
         this.selectedColor = `#${Filters.rgbToHex(pointPixel)}`;
-        this.execWithKey();
       },
       applySpStyle(vpWidth) {
         let canvasWidth = Math.min(vpWidth * 0.7, 600);
