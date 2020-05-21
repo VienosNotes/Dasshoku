@@ -201,13 +201,13 @@
       chooseColor(ev) {
         let pointBuffer = this.origCtx.getImageData(ev.offsetX, ev.offsetY, 1, 1);
         let pointPixel = pointBuffer.data;
-        this.selectedColor = `#${Filters.rgbToHex(pointPixel)}`;
 
         // on the canvas but out of the image
-        if (pointPixel[3] === 255) {
+        if (pointPixel[3] === 0) {
           return;
         }
 
+        this.selectedColor = `#${Filters.rgbToHex(pointPixel)}`;
         this.execWithKey();
       },
       applySpStyle(vpWidth) {
