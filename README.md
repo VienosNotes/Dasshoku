@@ -2,7 +2,7 @@
 
 ![dasshoku_logo](docs/img/dasshoku_logo.png)
 
-Dasshoku は指定した画像から、特定の色だけを残して白黒化するウェブアプリです。
+[Dasshoku](https://vienosnotes.github.io/Dasshoku/) は指定した画像から、特定の色だけを残して白黒化するウェブアプリです。
 
 
 ## 使い方
