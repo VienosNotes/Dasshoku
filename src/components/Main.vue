@@ -36,10 +36,14 @@
         </div>
         <div id="palette-container">
             <div class="palette">
-                <div id="color-chooser" class="controller">
-                    Chosen Color: <span id="chosen-color-sample" :style="{ background: selectedColor }"></span><span>{{selectedColor}}</span>
+                <div id="settings-panel">
+                    <div id="color-chooser" class="controller">
+                        Chosen Color: <span id="chosen-color-sample" :style="{ background: selectedColor }"></span><span>{{selectedColor}}</span>
+                    </div>
+                <div>
+                    <Checkbox v-model="enableSmoothing" id="enable-antialias" class="checkbox" :color="primary_color">Smoothing Edge</Checkbox>
                 </div>
-
+              </div>
                 <div class="controller">
                     <div>Threshold: {{threshold}}</div>
                     <vue-slider :style="{visibility: isProcessing ? 'hidden' : 'visible'}" v-model="threshold" :data="threshold_range" :lazy="true"></vue-slider>
@@ -78,20 +82,23 @@
   import BlankImage from '../assets/test.jpg';
   import Filters from '../filters.js';
   import VueSlider from 'vue-slider-component';
+  import Checkbox from 'vue-material-checkbox';
 
   const sp_threshold = 1500; // maximum smartphone screen width
   const aspect_ratio = 3 / 4;
   const max_threshold = 200; // maximum threshold of distance
   const large_size_threshold = 1920;
   const medium_size_threshold = 800;
+  const primary_color = "#ffa500";
+  const smooth_range = 0.5;
 
   export default {
     name: 'Main',
     components: {
-      VueSlider
+      VueSlider, Checkbox
     },
     props: {
-      msg: String,
+      msg: String
     },
     data() {
       return {
@@ -104,7 +111,9 @@
         threshold_range: [],
         image: Image,
         isProcessing: false,
-        isSizeChooserVisible: false
+        isSizeChooserVisible: false,
+        primary_color: primary_color,
+        enableSmoothing: true
       }
     },
     watch: {
@@ -302,7 +311,8 @@
           h_weight: this.h_weight,
           s_weight: this.s_weight,
           v_weight: this.v_weight,
-          threshold: this.threshold
+          threshold: this.threshold,
+          smoothingRange: this.enableSmoothing ? smooth_range : 0
         };
       },
       /**
@@ -494,7 +504,6 @@ label input
   text-align left
   width 25%
 
-
 .size-caption
   color darkgray
   text-align left
@@ -510,4 +519,12 @@ label input
 #size-chooser-caption
   font-size larger
   margin-bottom 10px
+
+#settings-panel
+  display flex
+  justify-content start
+  align-items center
+
+.checkbox
+  margin-left 3em
 </style>
