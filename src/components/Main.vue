@@ -90,7 +90,7 @@
   const large_size_threshold = 1920;
   const medium_size_threshold = 800;
   const primary_color = "#ffa500";
-  const smooth_range = 0.5;
+  const smooth_range = 0.1;
 
   export default {
     name: 'Main',
@@ -130,6 +130,9 @@
         this.execWithKey(this.origCanvas, this.dasshokuCanvas)
       },
       v_weight() {
+        this.execWithKey(this.origCanvas, this.dasshokuCanvas)
+      },
+      enableSmoothing() {
         this.execWithKey(this.origCanvas, this.dasshokuCanvas)
       }
     },

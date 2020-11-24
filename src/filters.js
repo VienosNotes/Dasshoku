@@ -19,15 +19,12 @@ export default {
 
       if (distance > setting.threshold) {
         let rate = 0;
+
+        // smoothing check
         if (distance < setting.threshold*(1 + setting.smoothingRange)) {
           rate = 1 - ((distance - setting.threshold) / (setting.threshold*setting.smoothingRange));
         }
-        // //
-        // if (rate > 0.5) {
-        //   console.log([distance, rate]);
-        // }
-
-        this.decolorizePixel(buffer, idx, Math.sqrt(rate));
+        this.decolorizePixel(buffer, idx, rate);
       }
     });
   },
@@ -60,7 +57,7 @@ export default {
    * Decolorize a pixel([r, g, b, a]) in buffer using head index.
    * @param {Uint8ClampedArray} buffer Processed ImageData buffer.
    * @param {number} idx Head (R-channel) index of processing pixel.
-   * @param {number} rate of attenuation
+   * @param {number} rate of attenuation between 0(monochrome) and 1(colored)
    */
   decolorizePixel(buffer, idx, rate) {
     let hsl = Converter.rgb.hsl.raw(buffer[idx], buffer[idx+1], buffer[idx+2]);
