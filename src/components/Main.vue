@@ -12,7 +12,10 @@
                 <img src="../assets/gradient_triangle.png" width="110" alt="gradient triangle" id="triangle-img">
             </div>
             <div id="dasshoku-image-container" class="image-container">
-                <canvas id="dasshoku-image-canvas" width="600" height="400"></canvas>
+                <div id="dasshoku-image-frame">
+                    <canvas id="dasshoku-image-canvas" width="600" height="400"></canvas>
+                    <canvas id="dasshoku-image-overlay" width="600" height="400"></canvas>
+                </div>
             </div>
         </div>
         <div id="buttons-container">
@@ -84,6 +87,7 @@
   const max_threshold = 200; // maximum threshold of distance
   const large_size_threshold = 1920;
   const medium_size_threshold = 800;
+  const primary_color = "#ffa500";
 
   export default {
     name: 'Main',
@@ -104,7 +108,10 @@
         threshold_range: [],
         image: Image,
         isProcessing: false,
-        isSizeChooserVisible: false
+        isSizeChooserVisible: false,
+        lastClickPos: [0, 0],
+        lastMouseUpPos: [],
+        isDragging: false
       }
     },
     watch: {
@@ -143,6 +150,45 @@
         this.execWithKey(this.origCanvas, this.dasshokuCanvas);
       });
       img.src = BlankImage;
+
+
+      let olc = this.overlayCanvas;
+      let olcPos = olc.getBoundingClientRect();
+      olc.addEventListener('mousedown', e => {
+        let x = e.clientX - olcPos.left;
+        let y = e.clientY - olcPos.top;
+        this.lastClickPos = [x, y];
+        this.isDragging = true;
+      });
+
+      olc.addEventListener('mousemove', e => {
+        if (!this.isDragging) {
+          return;
+        }
+        let x = e.clientX - olcPos.left;
+        let y = e.clientY - olcPos.top;
+        this.drawRectOverlay(
+          Math.min(x, this.lastClickPos[0]),
+          Math.min(y, this.lastClickPos[1]),
+          Math.abs(x - this.lastClickPos[0]),
+          Math.abs(y - this.lastClickPos[1])
+        )
+      });
+
+      olc.addEventListener('mouseleave', e => {
+        let x = e.clientX - olcPos.left;
+        let y = e.clientY - olcPos.top;
+        this.lastMouseUpPos = [x - olcPos.left, y - olcPos.top];
+        this.isDragging = false;
+      });
+
+      olc.addEventListener('mouseup', e => {
+        let x = e.clientX - olcPos.left;
+        let y = e.clientY - olcPos.top;
+        this.lastMouseUpPos = [x - olcPos.left, y - olcPos.top];
+        this.isDragging = false;
+      });
+
     },
     methods: {
       /**
@@ -269,6 +315,16 @@
         {
           return 'very slow';
         }
+      },
+      drawRectOverlay(left, top, width, height) {
+        console.log(left);
+          let overlay = this.overlayCanvas;
+          let ctx = overlay.getContext("2d");
+          ctx.clearRect(0, 0, overlay.width, overlay.height);
+          ctx.lineWidth = 1;
+          ctx.strokeStyle = primary_color;
+          ctx.strokeRect(left, top, width, height);
+          ctx.stroke();
       }
     },
     computed: {
@@ -295,6 +351,14 @@
       dasshokuCanvas() {
         // noinspection JSValidateTypes
         return document.getElementById('dasshoku-image-canvas');
+      },
+      /**
+       * Canvas for overlay decolorized image.
+       * @returns {HTMLCanvasElement}
+       */
+      overlayCanvas() {
+        // noinspection JSValidateTypes
+        return document.getElementById('dasshoku-image-overlay');
       },
       currentSetting() {
         return {
@@ -510,4 +574,13 @@ label input
 #size-chooser-caption
   font-size larger
   margin-bottom 10px
+
+
+#dasshoku-image-frame
+  position relative
+
+#dasshoku-image-overlay
+  position absolute
+  top 0
+  left 0
 </style>
