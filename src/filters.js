@@ -7,6 +7,7 @@ export default {
    * @param {object} setting
    */
   decolorizeWithoutKeyColor(buffer, setting) {
+    console.log(setting);
     this.apply(buffer, (buffer, idx) => {
       let key = Converter.hex.hsv(setting.key);
       let hsv = Converter.rgb.hsv(buffer[idx], buffer[idx+1], buffer[idx+2]);
@@ -41,6 +42,7 @@ export default {
    * @param {Function} filter Filter function that get {UInt16Array} and cursor index.
    */
   apply(buffer, filter) {
+    // TODO: ここで座標を見て範囲外なら直接 decolorize する
     let pixelsCount = buffer.data.length / 4;
     let pixels = buffer.data;
     for (let i = 0; i < (pixelsCount*4)-1; i += 4) {

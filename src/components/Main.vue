@@ -16,6 +16,7 @@
                     <canvas id="dasshoku-image-canvas" width="600" height="400"></canvas>
                     <canvas id="dasshoku-image-overlay" width="600" height="400"></canvas>
                 </div>
+                <div id="drag-caption">Drag to specify effective area (click to cancel)</div>
             </div>
         </div>
         <div id="buttons-container">
@@ -110,7 +111,7 @@
         isProcessing: false,
         isSizeChooserVisible: false,
         lastClickPos: [0, 0],
-        lastMouseUpPos: [],
+        lastMouseUpPos: [0, 0],
         isDragging: false
       }
     },
@@ -151,9 +152,11 @@
       });
       img.src = BlankImage;
 
-
+      this.lastMouseUpPos = [this.overlayCanvas.width, this.overlayCanvas.height];
       let olc = this.overlayCanvas;
       let olcPos = olc.getBoundingClientRect();
+
+      //let self = this;
       olc.addEventListener('mousedown', e => {
         let x = e.clientX - olcPos.left;
         let y = e.clientY - olcPos.top;
@@ -176,17 +179,34 @@
       });
 
       olc.addEventListener('mouseleave', e => {
+        if (!this.isDragging) {
+          return;
+        }
+        this.isDragging = false;
         let x = e.clientX - olcPos.left;
         let y = e.clientY - olcPos.top;
-        this.lastMouseUpPos = [x - olcPos.left, y - olcPos.top];
-        this.isDragging = false;
+        this.lastMouseUpPos = [x, y];
+        this.execWithKey(this.origCanvas, this.dasshokuCanvas);
       });
 
+
       olc.addEventListener('mouseup', e => {
+        if (!this.isDragging) {
+          return;
+        }
+        this.isDragging = false;
         let x = e.clientX - olcPos.left;
         let y = e.clientY - olcPos.top;
-        this.lastMouseUpPos = [x - olcPos.left, y - olcPos.top];
-        this.isDragging = false;
+
+        if (Math.abs(x - this.lastClickPos[0]) < 1 && Math.abs(y - this.lastClickPos[1]) < 1) {
+          // reset area if down & up in the same point
+          this.lastClickPos = [0, 0];
+          this.lastMouseUpPos = [this.overlayCanvas.width, this.overlayCanvas.height];
+        } else {
+          // apply area
+          this.lastMouseUpPos = [x, y];
+        }
+        this.execWithKey(this.origCanvas, this.dasshokuCanvas);
       });
 
     },
@@ -317,7 +337,6 @@
         }
       },
       drawRectOverlay(left, top, width, height) {
-        console.log(left);
           let overlay = this.overlayCanvas;
           let ctx = overlay.getContext("2d");
           ctx.clearRect(0, 0, overlay.width, overlay.height);
@@ -366,7 +385,15 @@
           h_weight: this.h_weight,
           s_weight: this.s_weight,
           v_weight: this.v_weight,
-          threshold: this.threshold
+          threshold: this.threshold,
+          areaTopLeft: [
+            Math.min(this.lastClickPos[0], this.lastMouseUpPos[0]) / this.dasshokuCanvas.width,
+            Math.min(this.lastClickPos[1], this.lastMouseUpPos[1]) / this.dasshokuCanvas.height
+            ],
+          areaBottomRight: [
+            Math.max(this.lastClickPos[0], this.lastMouseUpPos[0]) / this.dasshokuCanvas.width,
+            Math.max(this.lastClickPos[1], this.lastMouseUpPos[1]) / this.dasshokuCanvas.height
+          ]
         };
       },
       /**
@@ -445,6 +472,14 @@ $threshold = 1500
         flex-direction column
 
 #click-caption
+    color darkgray
+    user-select none
+
+    @media screen and (max-width: $threshold px)
+        margin-top 0
+        margin-bottom 5px
+
+#drag-caption
     color darkgray
     user-select none
 
