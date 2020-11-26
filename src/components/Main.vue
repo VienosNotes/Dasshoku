@@ -189,7 +189,6 @@
         this.execWithKey(this.origCanvas, this.dasshokuCanvas);
       });
 
-
       olc.addEventListener('mouseup', e => {
         if (!this.isDragging) {
           return;
@@ -201,7 +200,8 @@
         if (Math.abs(x - this.lastClickPos[0]) < 1 && Math.abs(y - this.lastClickPos[1]) < 1) {
           // reset area if down & up in the same point
           this.lastClickPos = [0, 0];
-          this.lastMouseUpPos = [this.overlayCanvas.width, this.overlayCanvas.height];
+          this.lastMouseUpPos = [olc.width, olc.height];
+          olc.getContext('2d').clearRect(0, 0, olc.width, olc.height);
         } else {
           // apply area
           this.lastMouseUpPos = [x, y];
@@ -257,7 +257,7 @@
        */
       execWithKey(canvas, outputCanvas) {
         let origBuffer = canvas.getContext('2d').getImageData(0, 0, canvas.width, canvas.height);
-        Filters.decolorizeWithoutKeyColor(origBuffer, this.currentSetting);
+        Filters.decolorizeWithoutKeyColor(origBuffer, this.currentSetting, outputCanvas.width);
         outputCanvas.getContext('2d').putImageData(origBuffer, 0, 0);
       },
       /**
@@ -386,11 +386,11 @@
           s_weight: this.s_weight,
           v_weight: this.v_weight,
           threshold: this.threshold,
-          areaTopLeft: [
+          areaLeftTop: [
             Math.min(this.lastClickPos[0], this.lastMouseUpPos[0]) / this.dasshokuCanvas.width,
             Math.min(this.lastClickPos[1], this.lastMouseUpPos[1]) / this.dasshokuCanvas.height
             ],
-          areaBottomRight: [
+          areaRightBottom: [
             Math.max(this.lastClickPos[0], this.lastMouseUpPos[0]) / this.dasshokuCanvas.width,
             Math.max(this.lastClickPos[1], this.lastMouseUpPos[1]) / this.dasshokuCanvas.height
           ]
